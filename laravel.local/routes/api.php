@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PostController;
+use Illuminate\Http\JsonResponse;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +17,7 @@ use App\Http\Controllers\Api\AuthController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/auth/me', function (Request $request) {
+Route::middleware('auth:sanctum')->get('/auth/me', function (Request $request): JsonResponse {
     $user = $request->user();
     return response()->json([
         'name' => $user->name,
@@ -27,5 +29,11 @@ Route::post('/auth/register', [AuthController::class, 'createUser']);
 Route::post('/auth/login', [AuthController::class, 'loginUser']);
 Route::post('/auth/logout', [AuthController::class, 'logoutUser']);
 Route::post('/auth/changeData', [AuthController::class, 'changeUserData']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResources([
+        'posts' => PostController::class,
+        'posts/{id}' => PostController::class,
+    ]);
+});
 
 
