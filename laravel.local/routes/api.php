@@ -17,18 +17,11 @@ use Illuminate\Http\JsonResponse;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/auth/me', function (Request $request): JsonResponse {
-    $user = $request->user();
-    return response()->json([
-        'name' => $user->name,
-        'surname' => $user->surname,
-        'login' => $user->login,
-    ]);
-});
+Route::middleware('auth:sanctum')->get('/auth/me', [AuthController::class, 'showUser']);
 Route::post('/auth/register', [AuthController::class, 'createUser']);
 Route::post('/auth/login', [AuthController::class, 'loginUser']);
 Route::post('/auth/logout', [AuthController::class, 'logoutUser']);
-Route::post('/auth/changeData', [AuthController::class, 'changeUserData']);
+Route::middleware('auth:sanctum')->post('/auth/changeData', [AuthController::class, 'changeUserData']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResources([
         'posts' => PostController::class,

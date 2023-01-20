@@ -31,9 +31,12 @@ return new class extends Migration
     public function down()
     {
         Schema::table('posts', function (Blueprint $table) {
-            $table->dropForeign('posts_user_id_foreign');
+            $table->softDeletes();
+            /*$table->dropForeign('posts_user_id_foreign');
+            $table->dropColumn('user_id');
             $table->dropForeign('posts_category_id_foreign');
+            $table->dropColumn('category_id');*/
         });
-        Schema::dropIfExists('posts');
+        #Schema::dropIfExists('posts');
     }
 };
