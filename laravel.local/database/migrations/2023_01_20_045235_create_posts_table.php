@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('head');
             $table->text('text');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -31,12 +32,11 @@ return new class extends Migration
     public function down()
     {
         Schema::table('posts', function (Blueprint $table) {
-            $table->softDeletes();
-            /*$table->dropForeign('posts_user_id_foreign');
+            $table->dropForeign('posts_user_id_foreign');
             $table->dropColumn('user_id');
             $table->dropForeign('posts_category_id_foreign');
-            $table->dropColumn('category_id');*/
+            $table->dropColumn('category_id');
         });
-        #Schema::dropIfExists('posts');
+        Schema::dropIfExists('posts');
     }
 };

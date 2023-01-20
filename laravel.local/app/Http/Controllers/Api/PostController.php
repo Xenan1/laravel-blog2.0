@@ -17,7 +17,7 @@ class PostController extends Controller
 
     public function index(): JsonResponse
     {
-        return response()->json(PostsResource::collection(Post::all()));
+        return response()->json(PostsResource::collection(Post::cursorPaginate(10)));
     }
 
     public function store(PostStoreRequest $request): JsonResponse
