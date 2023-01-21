@@ -1,0 +1,453 @@
+openapi: 3.0.3
+info:
+  title: Blog
+  version: 0.0.1
+servers:
+ - url: http://127.0.0.1:8000/
+   description: Developer server
+paths:
+  /posts:
+    get:
+      summary: Get all posts with pagination
+      tags:
+        - Posts
+      operationId: getAllPosts
+      responses:
+        '200':
+          description: Get posts list successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostList'
+    post:
+      summary: Create new post
+      tags:
+        - Posts
+      operationId: createNewPost
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewPost'
+      responses:
+        '200':
+          description: Get post succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OnlyPost'
+    put:
+      summary: Update post
+      tags:
+        - Posts
+      operationId: updatePost
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchPost'
+      responses:
+        '200':
+          description: Get post succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OnlyPost'
+        
+  /posts/{post_id}:
+    get:
+      summary: Get post by id
+      tags:
+        - Posts
+      operationId: getPostById
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          description: post's id
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Get post succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OnlyPost'
+  /posts/{post_id}/like:
+    get:
+      summary: Add like to post from user
+      tags:
+        - Posts
+      operationId: likePost
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          description: Liked post's id
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post liked successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+                
+  /posts/{post_id}/unlike:
+    get:
+      summary: Remove user's like from post
+      tags:
+        - Posts
+      operationId: unlikePost
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          description: Unliked post's id
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Post unliked successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+  
+  /posts/{post_id}/comment:
+    post:
+      summary: Add comment to post from user
+      tags:
+        - Posts
+      operationId: commentPost
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          description: Commented post's id
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewComment'
+      responses:
+        '200':
+          description: Post liked successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+                
+  /auth/register:
+    post:
+      summary: Register new user
+      tags:
+       - User
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewUser'
+      responses:
+        '200':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+  /auth/login:
+    post:
+      summary: Log in user
+      tags:
+      - User
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUser'
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success' 
+  /auth/logout:
+    post:
+      summary: Log out user
+      tags:
+      - User
+      operationId: logoutUser
+      responses:
+        '200':
+          description: User logged out successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success' 
+  /auth/changeData:
+    post:
+      summary: Change user's data
+      tags:
+      - User
+      operationId: changeUserData
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangeUser'
+      responses:
+        '200':
+          description: User's data changed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success' 
+      
+  /auth/me:
+    get:
+      summary: Show users data
+      tags:
+        - User
+      operationId: showUser
+      responses:
+        '200':
+          description: Get user's data successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /auth/me/activity:
+    get:
+      summary: Show user's activity
+      tags:
+        - User
+      operationId: showUserActivity
+      responses:
+        '200':
+          description: Get user's activity successfully
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserActivity'
+  
+            
+  
+              
+              
+              
+              
+components:
+  schemas:
+    ListItemPost:
+      type: object
+      required:
+        - id
+        - head
+        - text
+        - likes
+        - comments
+      properties:
+        id:
+          type: integer
+          example: 1
+        head:
+          type: string
+          example: History of automotive industry
+        text:
+          type: string
+          description: First 100 chars of post's text
+        likes:
+          type: integer
+          example: 23
+          description: Amount of likes on the post
+        comments:
+          type: integer
+          example: 4
+          description: Amount of comments on the post
+    PostList:
+      type: array
+      items:
+        $ref: '#/components/schemas/ListItemPost'
+    OnlyPost:
+      required:
+        - name
+        - surname
+        - head
+        - text
+        - comments
+      properties:
+        name:
+          type: string
+          example: Jason
+          description: Author's name
+        surname:
+          type: string
+          example: Willow
+          description: Author's surname
+        head:
+          type: string
+          example: History of automotive industry
+        text:
+          type: string
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+    Comment:
+      required:
+        - id
+        - post_id
+        - user_id
+        - text
+        - created_at
+      properties:
+        id:
+          type: integer
+        post_id:
+          type: integer
+          description: From which post is this comment
+        user_id:
+          type: integer
+          description: Author's id
+        text:
+          type: string
+        created_at:
+          type: string
+          format: 2023-01-17T15:00:00:00
+    NewPost:
+      required:
+        - head
+        - text
+        - category_id
+      properties:
+        head:
+          type: string
+          example: History of automotive industry
+        text:
+          type: string
+        category_id:
+          type: integer
+          description: Which category belongs post
+    PatchPost:
+      required:
+        - head
+        - text
+      properties:
+        head:
+          type: string
+          example: History of automotive industry
+        text:
+          type: string
+    NewUser:
+      required:
+        - name
+        - surname
+        - login
+        - password
+      properties:
+        name:
+          type: string
+          example: John
+        surname:
+          type: string
+          example: Willow
+        login:
+          type: string
+          example: john.willow
+        password:
+          type: string
+          example: LK]d]7
+    Success:
+      properties:
+        message:
+          type: string
+          example: User Created Successfully
+    LoginUser:
+      required:
+        - login
+        - password
+      properties:
+        login:
+          type: string
+          example: john.willow
+        password:
+          type: string
+          example: LK]d]7
+    ChangeUser:
+      required:
+        - name
+        - surname
+        - password
+      properties:
+        name:
+          type: string
+          example: John
+        surname:
+          type: string
+          example: Willow
+        password:
+          type: string
+          example: LK]d]7
+    User:
+      required:
+        - name
+        - surname
+        - login
+      properties:
+        name:
+          type: string
+          example: John
+        surname:
+          type: string
+          example: Willow
+        login:
+          type: string
+          example: john.willow
+    UserActivity:
+      required:
+        - likes
+        - comments
+      properties:
+        likes:
+          $ref: '#/components/schemas/OnlyPost'
+        comments:
+          $ref: '#/components/schemas/UserComment'
+          
+    UserComment:
+      required:
+        - text
+        - created_at
+        - link
+      properties:
+        text:
+          type: string
+        created_at:
+          type: string
+          format: 2023-01-17T15:00:00:00
+        link:
+          type: string
+          description: Link to a comment's post
+          example: posts/2
+    NewComment:
+      required:
+        - text
+      properties:
+        text:
+          type: string
+        
+      
+        
+      
