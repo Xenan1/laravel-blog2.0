@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PostsResource;
 use App\Http\Resources\PostResource;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 use App\Models\Post;
 use App\Http\Requests\PostStoreRequest;

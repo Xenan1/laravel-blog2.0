@@ -5,15 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Models\Like;
-use App\Models\Post;
-use http\Env\Response;
 use Illuminate\Http\JsonResponse;
 use App\Http\Resources\UserActivityResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\CommentRequest;
-use Symfony\Component\Console\Helper\Table;
 
 class UserController extends Controller
 {
@@ -57,6 +54,6 @@ class UserController extends Controller
             'post_id' => $post_id,
             'text' => $request['text']
         ]);
-        return ($new_comment);
+        return response()->json($new_comment);
     }
 }
