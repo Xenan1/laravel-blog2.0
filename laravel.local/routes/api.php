@@ -24,6 +24,8 @@ Route::post('/auth/login', [AuthController::class, 'loginUser']);
 Route::post('/auth/logout', [AuthController::class, 'logoutUser']);
 Route::middleware('auth:sanctum')->post('/auth/changeData', [AuthController::class, 'changeUserData']);
 Route::middleware('auth:sanctum')->get('posts/{id}/like', [UserController::class, 'likePost']);
+Route::middleware('auth:sanctum')->get('posts/{id}/unlike', [UserController::class, 'unlikePost']);
+Route::middleware('auth:sanctum')->post('posts/{id}/comment', [UserController::class, 'commentPost']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResources([
         'posts' => PostController::class,
